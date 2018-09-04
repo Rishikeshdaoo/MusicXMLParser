@@ -7,20 +7,47 @@ from scipy.io.wavfile import read
 from scipy.io.wavfile import write
 
 tempo = 0.0
-beats = 4
-beat_size = 4
+beats = []
+beat_size = []
+iter = 0
 sampling_rate = 44100.0
 audio = []
 upbeat = []
 downbeat = []
 silence = []
 
-tree = et.parse('E:/SensiBol/MusicXML/Vaccai_1.musicxml')
+tree = et.parse('E:/SensiBol/MusicXML/Down_In_The_River_To_Pray_New.musicxml')
 root = tree.getroot()
 
 for sound in root.iter('sound'):
     if 'tempo' in sound.attrib.keys():
         tempo = int(float(sound.attrib.get('tempo')))
+
+temp_beat = 0
+temp_size = 0
+for measures in root.iter('measure'):
+    for measureChild in measures:
+        if measureChild.tag == 'attributes':
+            for attribChild in measureChild:
+                if attribChild.tag == 'time':
+                    for timeChild in attribChild:
+                        if timeChild.tag == 'beats':
+                            temp_beat = int(timeChild.text)
+                        if timeChild.tag == 'beat-type':
+                            temp_size = int(timeChild.text)
+
+    beats.append(temp_beat)
+    beat_size.append(temp_size)
+    iter += 1
+
+iter = int(iter/2)
+beats = beats[:iter]
+beat_size = beat_size[:iter]
+
+print(iter, beats, beat_size)
+
+# import sys
+# sys.exit()
 
 
 def click(duration_milliseconds=500):
@@ -33,7 +60,7 @@ def click(duration_milliseconds=500):
 
     num_samples = int(float(duration_milliseconds * (sampling_rate / 1000.0)))
     samples_per_beat = int(float((60.0 / tempo) * sampling_rate))
-    iterations = int(num_samples / (samples_per_beat* beats))
+    # iterations = int(num_samples / (samples_per_beat* beats))
 
     for silenceSamp in range(samples_per_beat - 5000):
         silence.append(0.0)
@@ -50,8 +77,8 @@ def click(duration_milliseconds=500):
     upbeat = upbeat[0:5000]
     downbeat = downbeat[0:5000]
 
-    for n in range(iterations):
-        for current_beat in range(beats):
+    for n in range(iter):
+        for current_beat in range(beats[n]):
             if current_beat == 0:
                 audio.extend(upbeat)
             else:
