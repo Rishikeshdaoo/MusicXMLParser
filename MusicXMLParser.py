@@ -19,7 +19,7 @@ tree = et.parse('E:/SensiBol/MusicXML/Vaccai_1.musicxml')
 root = tree.getroot()
 
 for sound in root.iter('sound'):
-    if('tempo' in sound.attrib.keys()):
+    if 'tempo' in sound.attrib.keys():
         tempo = int(float(sound.attrib.get('tempo')))
 
 
@@ -34,12 +34,6 @@ def click(duration_milliseconds=500):
     num_samples = int(float(duration_milliseconds * (sampling_rate / 1000.0)))
     samples_per_beat = int(float((60.0/120) * sampling_rate))
     iterations = int(num_samples/samples_per_beat)
-
-    # for upbeatSamp in range(5040):
-    #     upbeat.append(0.09 * math.sin(2 * math.pi * 630 * (upbeatSamp / sampling_rate)))
-    #
-    # for downbeatSamp in range(5040):
-    #     downbeat.append(0.09 * math.sin(2 * math.pi * 504 * (downbeatSamp / sampling_rate)))
 
     for silenceSamp in range(samples_per_beat - 5000):
         silence.append(0.0)
@@ -68,10 +62,6 @@ def click(duration_milliseconds=500):
             audio.extend(silence)
 
     return
-
-
-
-
 
 def save_wav(file_name):
     # Open up a wav file
