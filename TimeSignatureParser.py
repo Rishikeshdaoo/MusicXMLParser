@@ -32,8 +32,8 @@ def click(duration_milliseconds=500):
     global downbeat
 
     num_samples = int(float(duration_milliseconds * (sampling_rate / 1000.0)))
-    samples_per_beat = int(float((60.0/120) * sampling_rate))
-    iterations = int(num_samples/samples_per_beat)
+    samples_per_beat = int(float((60.0 / tempo) * sampling_rate))
+    iterations = int(num_samples / (samples_per_beat* beats))
 
     for silenceSamp in range(samples_per_beat - 5000):
         silence.append(0.0)
@@ -44,17 +44,15 @@ def click(duration_milliseconds=500):
     upbeat = upbeat_wav[:, 1]
     downbeat = downbeat_wav[:, 1]
 
-    upbeat = upbeat/ upbeat.max()
-    downbeat = downbeat/ downbeat.max()
+    upbeat = upbeat / upbeat.max()
+    downbeat = downbeat / downbeat.max()
 
     upbeat = upbeat[0:5000]
     downbeat = downbeat[0:5000]
 
-    print(len(upbeat))
-
     for n in range(iterations):
         for current_beat in range(beats):
-            if(current_beat == 0):
+            if current_beat == 0:
                 audio.extend(upbeat)
             else:
                 audio.extend(downbeat)
@@ -63,9 +61,10 @@ def click(duration_milliseconds=500):
 
     return
 
+
 def save_wav(file_name):
     # Open up a wav file
-    wav_file=wave.open(file_name,"w")
+    wav_file = wave.open(file_name, "w")
 
     # wav params
     nchannels = 1
@@ -86,12 +85,12 @@ def save_wav(file_name):
     # use the floating point -1.0 to 1.0 data directly in a WAV file but not
     # obvious how to do that using the wave module in python.
     for sample in audio:
-        wav_file.writeframes(struct.pack('h', int(sample * 32767.0 )))
+        wav_file.writeframes(struct.pack('h', int(sample * 32767.0)))
 
     wav_file.close()
 
     return
 
 
-click(4000)
+click(8000)
 save_wav("E:/metroTest.wav")
