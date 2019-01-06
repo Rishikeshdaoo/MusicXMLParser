@@ -16,7 +16,7 @@ upbeat = []
 downbeat = []
 silence = []
 
-tree = et.parse('E:/SensiBol/MusicXML/Down_In_The_River_To_Pray_New.musicxml')
+tree = et.parse('E:/MusicXML/Down_In_The_River_To_Pray_New.musicxml')
 root = tree.getroot()
 
 for sound in root.iter('sound'):
@@ -65,8 +65,8 @@ def click(duration_milliseconds=500):
     for silenceSamp in range(samples_per_beat - 5000):
         silence.append(0.0)
 
-    _, upbeat_wav = read('E:/SensiBol/MusicXML/metronomeup.wav')
-    _, downbeat_wav = read('E:/SensiBol/MusicXML/metronomedown.wav')
+    _, upbeat_wav = read('E:/MusicXML/metronomeup.wav')
+    _, downbeat_wav = read('E:/MusicXML/metronomedown.wav')
 
     upbeat = upbeat_wav[:, 1]
     downbeat = downbeat_wav[:, 1]
